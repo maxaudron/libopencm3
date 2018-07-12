@@ -32,8 +32,8 @@ TGT_CFLAGS      += $(DEBUG_FLAGS)
 #TGT_CFLAGS	+= $(STANDARD_FLAGS)
 # ARFLAGS	= rcsv
 ARFLAGS		= rcs
-OBJS		+= gclk.o nvmctrl.o usb_samdx.o port.o
-OBJS		+= usb.o usb_control.o usb_standard.o
+OBJS		+= gclk.o nvmctrl.o port.o usb_samdx.o
+OBJS		+= usb.o usb_control.o usb_standard.o uart.o
 
 VPATH += ../../usb:../:../../cm3:../common
 
