@@ -37,6 +37,7 @@ ARFLAGS		= rcs
 OBJS		+= gclk.o nvmctrl.o port.o usb_samdx.o
 OBJS		+= usb.o usb_control.o usb_standard.o uart.o
 OBJS		+= adc.o
+OBJS		+= eic.o tc.o
 
 VPATH += ../../usb:../:../../cm3:../common:../../ushell
 
