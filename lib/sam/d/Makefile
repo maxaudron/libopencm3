@@ -31,15 +31,17 @@ TGT_CFLAGS	= -Os -Wall -Wextra -I../../../include -fno-common \
 TGT_CFLAGS      += -nodefaultlibs -ffreestanding
 
 # Use CPU IOBUS for direct GPIO access which is single cycle access
-TGT_CFLAGS	+= -DSAMD_HIGHSPEED_IO -DCONSOLE_HISTORY_ENABLE
-TGT_CFLAGS      += $(DEBUG_FLAGS)
+TGT_CFLAGS += -DSAMD_HIGHSPEED_IO -DCONSOLE_HISTORY_ENABLE
+TGT_CFLAGS += $(DEBUG_FLAGS)
+TGT_CFLAGS += $(STANDARD_FLAGS)
 ARFLAGS		= rcs
 OBJS		+= gclk.o nvmctrl.o port.o usb_samdx.o
 OBJS		+= usb.o usb_control.o usb_standard.o uart.o
 OBJS		+= adc.o
 OBJS		+= eic.o tc.o
+OBJS		+= i2c.o
 
-VPATH += ../../usb:../:../../cm3:../common:../../ushell
+VPATH += ../../usb:../:../../cm3:../common
 
 include ../../Makefile.include
 

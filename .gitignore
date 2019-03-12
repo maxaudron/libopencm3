@@ -29,6 +29,7 @@ include/libopencm3/**/**/nvic.h
 !include/libopencm3/cm3/nvic.h
 !include/libopencm3/dispatch/nvic.h
 !include/libopencm3/lm4f/nvic.h
+!include/libopencm3/sam/d/nvic.h
 lib/**/vector_nvic.c
 lib/**/**/vector_nvic.c
 # (not this one either)

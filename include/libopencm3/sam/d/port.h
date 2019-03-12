@@ -23,6 +23,7 @@
  */
 #define PORTA				(PORT_BASE + 0)
 #define PORTB				(PORT_BASE + 0x80)
+#define PORTC				(PORT_BASE + 0x80*2)
 /**@}*/
 
 /* GPIO number definitions (for convenience) */

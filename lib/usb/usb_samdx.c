@@ -63,6 +63,8 @@ const struct _usbd_driver samd21_usb_driver = {
 	.ep_read_packet = samd21_ep_read_packet,
 	.poll = samd21_poll,
 	.disconnect = samd21_disconnect,
+	.base_address = SAMD21_USB_BASE,
+	.set_address_before_status = 1,
 };
 
 /** Initialize the USB device controller hardware of the STM32. */
@@ -98,6 +100,7 @@ samd21_ep_setup(usbd_device *dev, uint8_t addr, uint8_t type, uint16_t max_size,
 {
 	uint8_t dir = addr & 0x80;
 	addr &= 0x7f;
+
 	uint8_t size = 0;
 	switch (max_size) {
 		case 8: size = 0; break;
@@ -106,15 +109,10 @@ samd21_ep_setup(usbd_device *dev, uint8_t addr, uint8_t type, uint16_t max_size,
 		case 64: size = 3; break;
 		case 128: size = 3; break;
 		default:
-			asm("bkpt"); /* Bug in program! */
+			size = 0; break;
 	}
 
 	if (dir || (type == USB_ENDPOINT_ATTR_CONTROL)) { /* IN endpoint */
-		if (callback) {
-			dev->user_callback_ctr[addr][USB_TRANSACTION_IN] =
-			    (void *)callback;
-		}
-
 		/* Setup DMA descriptor */
 		samd21_ep_desc[addr][1].addr = &endpoint_ram[dev->pm_top];
 		samd21_ep_desc[addr][1].pcksize = BF(USB_EP_PCKSIZE_SIZE, size);
@@ -130,13 +128,13 @@ samd21_ep_setup(usbd_device *dev, uint8_t addr, uint8_t type, uint16_t max_size,
 		USB->ep[addr].cfg = (USB->ep[addr].cfg & 0xF) |
 		                    ((type+1) << 4);
 
+		if (callback) {
+			dev->user_callback_ctr[addr][USB_TRANSACTION_IN] =
+			    (void *)callback;
+		}
 	}
 
 	if (dir == 0) { /* OUT endpoint */
-		if (callback) {
-			dev->user_callback_ctr[addr][USB_TRANSACTION_OUT] =
-			    (void *)callback;
-		}
 
 		/* Setup DMA descriptor */
 		samd21_ep_desc[addr][0].addr = &endpoint_ram[dev->pm_top];
@@ -153,6 +151,11 @@ samd21_ep_setup(usbd_device *dev, uint8_t addr, uint8_t type, uint16_t max_size,
 		/* Configure endpoint type */
 		USB->ep[addr].cfg = (USB->ep[addr].cfg & 0xF0) |
 		                    (type+1);
+
+		if (callback) {
+			dev->user_callback_ctr[addr][USB_TRANSACTION_OUT] =
+			    (void *)callback;
+		}
 	}
 
 	if (type == USB_ENDPOINT_ATTR_CONTROL)
